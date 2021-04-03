@@ -1,8 +1,136 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Prochaine Fermeture";
+
+    rasModel info = ViewData["Info"] as rasModel;
+
+    string GetTime(DateTime time)
+    {
+        TimeSpan timeSpan = time.Subtract(DateTime.Now);
+        return GetTimeSpan(timeSpan);
+    }
+
+    string GetTimeSpan(TimeSpan timeSpan)
+    {
+        return string.Format(
+            "{0}, {1} - {2} et {3}",
+            Clean(timeSpan.Days, "jour"),
+            Clean(timeSpan.Hours, "heures"),
+            Clean(timeSpan.Minutes, "minutes"),
+            Clean(timeSpan.Seconds, "secondes")
+            );
+    }
+
+    string Clean(int amount, string mot)
+    {
+        return string.Format("{0} {1}{2}", amount, mot, "");
+    }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .dates {
+        font-size: 70%;
+    }
+</style>
+
+<script>
+    function getTimeClose() {
+        var date = new Date(toLocalDate("@info.ClosingDate"));
+        var d = getTime(date - Date.now());
+        return (d.days, "jour") + ", " + (d.hours, "heures") + " " + (d.minutes, "minutes") + " et " + (d.seconds, "secondes");
+    }
+    
+    function getTime(d) {
+        var time = d / 1000;
+        var days = Math.floor(time / 86400);
+        time -= days * 86400;
+        var hours = Math.floor(time / 3600) % 24;
+        time -= hours * 3600;
+        var minutes = Math.floor(time / 60) % 60;
+        time -= minutes * 60;
+        var seconds = Math.floor(time);
+        return {
+            days: day,
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds
+        };
+    }
+    function toLocalDate(date) {
+        var res = date.split("/");
+        return res[1] + "/" + res[0] + "/" + res[2];
+    }
+   
+</script>
+<div>
+    <h1>Prochaine fermeture</h1>
+
+    <br>
+
+    <h2>Ferme le : <span class="dates">@info.ClosingDate.ToString("dddd dd MMMM yyyy à HH:mm")</span></h2>
+
+    <h2>Ouvre le : <span class="dates">@info.ReopeningDate.ToString("dddd dd MMMM yyyy à HH:mm")</span></h2>
+
+    <div>
+
+        <h3>
+            Prochaine Arrivée Ou Evenement : @if (@info.BoatName != "SILVER SPIRIT")
+                                            {
+                                                <span class="dates">@info.BoatName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="dates" style="color: red">@info.BoatName</span>
+
+                                            }
+                                            @if (@info.BoatName != "MARINA")
+                                            {
+                                                <span class="dates">@info.BoatName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="dates" style="color: orange">@info.BoatName</span>
+
+                                            }
+                                            @if (@info.BoatName != "MARINA")
+                                            {
+                                                <span class="dates">@info.BoatName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="dates" style="color: pink">@info.BoatName</span>
+
+                                            }
+                                            @if (@info.BoatName != "MAINTENANC")
+                                            {
+                                                <span class="dates">@info.BoatName</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="dates" style="color: red">@info.BoatName</span>
+
+                                            }
+        </h3>
+
+    </div>
+    
+    <h3> Temps de la prochaine  : <span class="dates">@GetTimeSpan(info.ReopeningDate.Subtract(info.ClosingDate))</span></h3>
+
+    <br>
+
+    <h3 style="color: green">
+        <span>
+            @if (info.ClosingDate.CompareTo(DateTime.Now) > 0)
+            {
+                @GetTime(info.ClosingDate)
+
+                <script>
+                    setInterval(() => {
+                        var countDown = document.getElementById("CloseCountDown");
+                        countDown.innerText = getTimeCLose();
+                    }, 1000);
+                </script>
+            }
+        </span> 
+        avant que je referme
+    </h3>
 </div>
