@@ -22,14 +22,14 @@ namespace Pont_Chaban.Controllers
 
         public IActionResult Index()
         {
-            List<BoatModel> boats = GetBoats();
-            boats.Sort((s1, s2) => DateTimeOffset.Compare(s1.ClosingDate, s2.ClosingDate));
+            List<rasModel> ras0 = Getras0();
+            ras0.Sort((s1, s2) => DateTimeOffset.Compare(s1.dateTotal, s2.dateTotal));
 
-            foreach (var boatModel in boats)
+            foreach (var rasModel in ras0)
             {
-                if (DateTimeOffset.Compare(DateTimeOffset.Now, boatModel.ClosingDate) < 0)
+                if (DateTimeOffset.Compare(DateTimeOffset.Now, rasModel.dateTotal) < 0)
                 {
-                    ViewData["Boat"] = boatModel;
+                    ViewData["ras"] = rasModel;
                     break;
                 }
             }
@@ -39,10 +39,15 @@ namespace Pont_Chaban.Controllers
 
         public IActionResult All()
         {
-            ViewData["Boats"] = GetBoats();
+            ViewData["ras0"] = Getras0();
             return View();
         }
 
+        public IActionResult Details(DateTime dateTotal)
+                {
+                    var fermetures = GetFermeturesFromApi();
+                    return View(fermetures.FirstOrDefault(f => f.dateTotal == dateTotal));
+                }
 
         //vcube
         private static List<Fermetures> GetFermeturesFromApi()

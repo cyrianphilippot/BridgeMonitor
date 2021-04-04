@@ -71,9 +71,9 @@
     <h2>Ouvre le : <span class="dates">@info.ReopeningDate.ToString("dddd dd MMMM yyyy à HH:mm")</span></h2>
 
     <div>
-
+        
         <h3>
-            Prochaine Arrivée Ou Evenement : @if (@info.BoatName != "SILVER SPIRIT")
+            Prochaine arrivage : @if (@info.BoatName != "SILVER SPIRIT")
                                             {
                                                 <span class="dates">@info.BoatName</span>
                                             }
@@ -114,6 +114,19 @@
     </div>
     
     <h3> Temps de la prochaine  : <span class="dates">@GetTimeSpan(info.ReopeningDate.Subtract(info.ClosingDate))</span></h3>
+
+    <br>
+
+    <h3>
+        Bouchon : @if ((info.ClosingDate.Hour >= 7 && info.ClosingDate.Hour <= 9) || (info.ClosingDate.Hour >= 17 && info.ClosingDate.Hour <= 19))
+        {
+            <span class="dates" style="color: black">Elevé</span>
+        }
+        else
+        {
+            <span class="dates" style="color: yellow">Faible</span>
+        }
+    </h3>
 
     <br>
 

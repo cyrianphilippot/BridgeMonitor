@@ -1,0 +1,49 @@
+@{ ViewData["Title"] = "Détails"; }
+<h1>@ViewData["Title"]</h1>
+
+@model Fermetures
+
+@{ TimeSpan diff = Model.dateIndex - Model.dateTotal;
+                DateTime DtNow = DateTime.UtcNow;
+                TimeSpan ProchaineFermeture = Model.dateTotal - DtNow;
+                var tempsAVimpact = "Sera dans " + ProchaineFermeture.Days + " jour(s), " + ProchaineFermeture.Hours + " heure(s), " + ProchaineFermeture.Minutes + " minute(s) et " + ProchaineFermeture.Seconds + " seconde(s)."; }
+
+<div class="card">
+    <h4 class="card-header">
+        <div class="alert alert-info" role="alert">
+            @tempsAVimpact
+        </div>
+    </h4>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Date de fermeture</th>
+                    <th>Date de réouverture</th>
+                    <th>Durée de la fermeture en heure</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.nomras</td>
+                    <td>@Model.dateTotal.ToString("dddd dd MMMM yyyy, HH:mm:ss")</td>
+                    <td>@Model.dateIndex.ToString("dddd dd MMMM yyyy, HH:mm:ss")</td>
+                    <td>@diff</td>
+                </tr>
+            </tbody>
+        </table>
+        @if ((@Model.dateTotal.Hour >= 7 && @Model.dateTotal.Hour <= 9) ^ (@Model.dateTotal.Hour >= 17 && @Model.dateTotal.Hour <= 19))
+        {
+        <div class="alert alert-danger" role="alert">
+            taux bouchons élevé.
+        </div>
+        } else
+        {
+        <div class="alert alert-success" role="alert">
+            taux bouchon faible.
+        </div>
+        }
+        <a href="/Home/total" class="btn btn-primary">Tout est  fermé</a>
+    </div>
+</div>
